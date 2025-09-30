@@ -16,17 +16,17 @@ pipeline {
     stage('Build Docker image') {
       steps {
         echo "Building Docker image ${IMAGE}"
-        sh 'docker build -t ${IMAGE} .'
+        sh 'sudo docker build -t ${IMAGE} .'
       }
     }
     stage('Deploy') {
       steps {
         sh '''
           # Stop and remove any old running container
-          docker rm -f ${CONTAINER_NAME} || true
+          sudo docker rm -f ${CONTAINER_NAME} || true
 
           # Run the new container in detached mode
-          docker run -d --name ${CONTAINER_NAME} -p 8080:80 ${IMAGE}
+          sudo docker run -d --name ${CONTAINER_NAME} -p 8080:80 ${IMAGE}
         '''
         echo "✅ Application deployed at: http://<DOCKER_NODE_IP>:8080"
       }
