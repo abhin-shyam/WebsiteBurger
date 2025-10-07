@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "websiteburger.fullname" " . }}
+  labels:
+    app.kubernetes.io/name: {{ include "websiteBurger.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLables: 
+      app.kubernetes.io/name: {{ include "websiteburger.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: {{ include "websiteburger.name" . }}
+          app.kubernetes.io/instance: {{ .Release.Name }}
+      spec:
+        containers:
+          - name: {{ include "websiteburger.name" . }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            ports:
+              - containerPort: {{ .Values.service.targetPort }}
+            livenessProbe:
+              httpGet:
+                path: /
+                port: {{ .Values.service.targetPort }}
+              initialDelaySeconds: 15
+              periodSeconds: 20
+            readinessProbe:
+              httpGet:
+                path: /
+                port: {{ .Values.service.targetPort }}
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            resources: {{ toYaml .Values.resources | indent 12 }}
+          
+          
