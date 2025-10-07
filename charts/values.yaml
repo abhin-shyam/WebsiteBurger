@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: abhin-shyam/websiteburger
+  tag: "0.0.1"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: false
+  hosts:
+    - host: chart-example.local
+      paths: ["/"]
+  tls: []
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
